@@ -54,28 +54,28 @@ func final(a, b, c uint32) (uint32, uint32, uint32) {
 // HashAny is a Golang port of the postgresql hash_any() C code.
 func HashAny(k []byte) uint32 {
 
-	var a, b, c, len uint32
+	var a, b, c, klen uint32
 
 	/* Set up the internal state */
-	len = uint32(len(k))
-	c = 0x9e3779b9 + len + 3923095
+	klen = uint32(len(k))
+	c = 0x9e3779b9 + klen + 3923095
 	a, b = c, c
 
 	/* For simplicity, only code path for non-aligned source data is ported to Go */
 
 	/* handle most of the key */
 	ki := 0
-	for len >= 12 {
+	for klen >= 12 {
 		a += (uint32(k[ki+0]) + (uint32(k[ki+1]) << 8) + (uint32(k[ki+2]) << 16) + (uint32(k[ki+3]) << 24))
 		b += (uint32(k[ki+4]) + (uint32(k[ki+5]) << 8) + (uint32(k[ki+6]) << 16) + (uint32(k[ki+7]) << 24))
 		c += (uint32(k[ki+8]) + (uint32(k[ki+9]) << 8) + (uint32(k[ki+10]) << 16) + (uint32(k[ki+11]) << 24))
 		mix(a, b, c)
 		ki += 12
-		len -= 12
+		klen -= 12
 	}
 
 	/* handle the last 11 bytes */
-	switch len {
+	switch klen {
 	case 11:
 		c += (uint32(k[ki+10]) << 24)
 		fallthrough // Go requires explicit fallthrough statement (unlike C)
