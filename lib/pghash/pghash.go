@@ -52,7 +52,7 @@ func final(a, b, c uint32) (uint32, uint32, uint32) {
 }
 
 // HashAny is a Golang port of the postgresql hash_any() C code.
-func HashAny(k []byte) uint32 {
+func HashAny(k []byte) (pghUnsigned uint32, pgh int32) {
 
 	var a, b, c, klen uint32
 
@@ -69,7 +69,7 @@ func HashAny(k []byte) uint32 {
 		a += (uint32(k[ki+0]) + (uint32(k[ki+1]) << 8) + (uint32(k[ki+2]) << 16) + (uint32(k[ki+3]) << 24))
 		b += (uint32(k[ki+4]) + (uint32(k[ki+5]) << 8) + (uint32(k[ki+6]) << 16) + (uint32(k[ki+7]) << 24))
 		c += (uint32(k[ki+8]) + (uint32(k[ki+9]) << 8) + (uint32(k[ki+10]) << 16) + (uint32(k[ki+11]) << 24))
-		mix(a, b, c)
+		a, b, c = mix(a, b, c)
 		ki += 12
 		klen -= 12
 	}
@@ -111,5 +111,5 @@ func HashAny(k []byte) uint32 {
 		a += uint32(k[ki+0])
 	}
 	a, b, c = final(a, b, c)
-	return c
+	return c, int32(c)
 }

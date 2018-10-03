@@ -12,7 +12,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Bytes()
-		h := pghash.HashAny(line)
-		fmt.Printf("%d\n", h)
+		hu, h := pghash.HashAny(line)
+		fmt.Printf("%d\t%d\n", hu, h)
 	}
 }

@@ -1,0 +1,3 @@
+create temp table foobar (x text);
+\copy foobar from 'words.txt'
+\copy (select x, hashtext(x) from foobar) to 'words_hash.txt'
